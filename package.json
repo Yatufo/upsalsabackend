@@ -4,8 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "./run.sh",
-    "postinstall": "cd ./public && npm install"
+    "start": "./run.sh"
   },
   "dependencies": {
     "async": "^0.9.0",

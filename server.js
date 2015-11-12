@@ -35,17 +35,6 @@ app.use(bodyParser.json());
 app.use(compression());
 
 
-var indexPath = __dirname + ctx.PUBLIC_DIR + ctx.SITE_INDEX;
-app.use(express.static(__dirname + ctx.PUBLIC_DIR, {
-  maxAge: ctx.MAX_AGE_GENERAL,
-  index: indexPath
-}));
-
-
-app.use('/assets', express.static(__dirname + ctx.PUBLIC_DIR + '/assets', {
-  maxAge: ctx.MAX_AGE_ASSETS
-}));
-
 app.get('/api/events', events.search);
 app.get('/api/events/:id', events.findById);
 app.get('/api/categories', categories.findAll);
@@ -61,11 +50,6 @@ app.put('/api/ratings/:id', auth, ratings.update);
 app.put('/api/comments/:id', auth, comments.update);
 app.get('/api/sync', backoffice.syncEvents);
 
-
-// This will ensure that all routing is handed over to AngularJS
-app.get('/*', function(req, res) {
-  res.sendFile(indexPath);
-});
 
 
 app.use(function(err, req, res, next) {
