@@ -31,8 +31,20 @@ Go to (http://localhost:5000/)
 #### Domain.
 The authentication requires a proper domain to work, so update your hosts file (/etc/hosts) to add the salsa.local domain
 
-``` 
+```
 127.0.0.1 salsa.local localhost
 ```
 
 Go to (http://salsa.local:5000/)
+
+
+
+#### Docker
+
+docker build -t upsalsa/upsalsa-api .
+
+To run in develop the only thing that changes is the db
+
+docker login
+docker pull upsalsa/upsalsa-api
+docker run -d  -e "DEPLOY_ENVIRONMENT=prod"  -e "MONGO_CONNECTION=mongodb://api:api@ds053794.mongolab.com:53794/upsalsa-dev" -p 3001:5000 upsalsa/upsalsa-api

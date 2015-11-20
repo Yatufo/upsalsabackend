@@ -29,7 +29,7 @@ if (ctx.prerenderToken) {
   app.use(require('prerender-node').set('prerenderToken', ctx.prerenderToken));
 }
 
-app.set('port', (process.env.PORT || 5001));
+app.set('port', (process.env.PORT || 5000));
 
 app.use(bodyParser.json());
 app.use(compression());
