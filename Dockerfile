@@ -8,4 +8,4 @@ COPY routes       routes
 
 RUN npm install --production
 EXPOSE 5000
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
