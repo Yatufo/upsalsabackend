@@ -22,7 +22,6 @@ start() {
      echo -e $COL_BLUE"Starting the server in DEVELOPMENT mode"$COL_RESET""
      echo "######################################################################"
      nodemon server.js &
-     cd public && grunt concat &&  grunt watch &
      mongod --dbpath=data/db
    fi
 }

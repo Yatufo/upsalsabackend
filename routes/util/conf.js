@@ -34,8 +34,8 @@
      s3: {
        folder : "/images",
        bucket: "salsa.local",
-       accessKeyId: "AKIAIMKUJAVKMMFQDQYA",
-       secretAccessKey: "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",
+       accessKeyId: process.env.AWS_ACCESS_KEY_ID || "AKIAIMKUJAVKMMFQDQYA",
+       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "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",
        region : 'us-east-1'
      },
      SIMULATED_NOW: "2015-03-12T03:00:00-05:00",
@@ -43,7 +43,7 @@
      EVENTS_MAXRESULTS: 200,
      EVENT_SEARCH_TIMEMAX: 7 * 24 * 60 * 60 * 1000,
      LOCATIONS_MAXRESULTS: 200,
-     MONGO_CONNECTION: process.env.MONGO_CONNECTION,
+     MONGO_CONNECTION: process.env.MONGO_CONNECTION || 'localhost:27017',
      UPDATE_MIN_SUBSTRACTION: 60 * 30 * 24 * 60 * 60 * 1000,
      MAX_REPETITIVE_EVENT: 2,
      SYNC_SEASON_START_SEQ: 2,
@@ -79,8 +79,8 @@
      s3: {
        folder : "/images",
        bucket: "upsalsa",
-       accessKeyId: "AKIAJWD6KJAV7SKU4XQQ",
-       secretAccessKey: "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",
+       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
        region : 'us-east-1'
      },
      CALENDAR_ID: "upsalsa@gmail.com",
