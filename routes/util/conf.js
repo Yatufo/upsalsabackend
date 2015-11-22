@@ -32,7 +32,7 @@
        audience: "zNhY5wesWo8iVMsdRYbM6VVXzeMjts0x"
      },
      s3: {
-       folder : "/images",
+       folder : "images",
        bucket: "salsa.local",
        accessKeyId: process.env.AWS_ACCESS_KEY_ID || "AKIAIMKUJAVKMMFQDQYA",
        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "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",
@@ -77,7 +77,7 @@
        audience: "zNhY5wesWo8iVMsdRYbM6VVXzeMjts0x"
      }, //TODO: Remove from the config and load using an ENV variable
      s3: {
-       folder : "/images",
+       folder : "images",
        bucket: "upsalsa",
        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
