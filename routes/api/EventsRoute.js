@@ -3,12 +3,13 @@ var async = require('async');
 var data = require('../model/core-data.js');
 var ctx = require('../util/conf.js').context();
 var usersRoute = require('./UsersRoute.js');
+var upload = require('./UploadRoute.js');
+
 //
 //
 exports.search = function(req, res) {
 
   var filters = getFiltersByCategories(req.query.categories);
-  var maxResults = ctx.EVENTS_MAXRESULTS;
 
 
   var conditions = {
@@ -44,7 +45,7 @@ exports.search = function(req, res) {
     data.Event.find()
       .where(conditions)
       .populate('location')
-      .limit(maxResults)
+      .limit(ctx.EVENTS_MAXRESULTS)
       .sort('-start.dateTime')
       .exec(callback);
   }
@@ -166,4 +167,63 @@ exports.create = function(req, res) {
       });
 
     });
+};
+
+
+exports.findByLocationId = function(req, res) {
+
+  data.Event.find({
+      "location.id": req.params.id
+    })
+    .limit(ctx.EVENTS_MAXRESULTS)
+    .sort('-start.dateTime')
+    .exec(function(err, singleEvent) {
+      res.send(singleEvent);
+    });
+};
+
+
+
+
+exports.addImage = function(req, res) {
+  var userId = req.user.sub;
+  var eventId = req.params.id;
+
+
+  upload.uploadImage(req, res, function(imageUrl) {
+
+    if (!(userId && eventId && imageUrl)) {
+      console.error("Invalid image parameters ", userId, eventId, imageUrl);
+      res.status(500).send({
+        "messages": ["Could not save the image"]
+      })
+      return
+    }
+
+
+
+    usersRoute
+      .findById(userId)
+      .then(function(user) {
+
+        console.log(user);
+
+        data.Event.findOneAndUpdate({
+          _id: eventId
+        }, {
+          $addToSet: {
+            images: {
+              url: imageUrl,
+              createdBy: user.id,
+            }
+          }
+        }, function(e, location) {
+          if (e) throw e;
+          res.status(201).send(location);
+        });
+      });
+
+  });
+
+
 };

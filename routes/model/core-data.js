@@ -4,13 +4,28 @@ var ctx = require('../util/conf.js').context();
 var Schema = mongoose.Schema;
 
 var EventSchema = new Schema({
-  title: String,
+  name: String,
   location: {
-    type: Schema.Types.ObjectId,
-    ref: 'Location'
+    id: {
+      type: String,
+      ref: 'Location'
+    },
+    name: String,
+    address: String,
+    url: String,
+    phone: String,
+    coordinates: {
+      longitude: Number,
+      latitude: Number
+    }
   },
-  images : [{
-    url : String
+  images: [{
+    url: String,
+    createdBy : {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    }
   }],
   sync: {
     uid: {
@@ -34,7 +49,7 @@ var EventSchema = new Schema({
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required : true
+    required: true
   }
 });
 
@@ -84,10 +99,10 @@ var LocationSchema = new Schema({
     longitude: Number,
     latitude: Number
   },
-  images : [{
-    url : String,
-    owner :  String, //TODO: use the ObjectId of the user.
-    created : Date
+  images: [{
+    url: String,
+    owner: String, //TODO: use the ObjectId of the user.
+    created: Date
   }],
   ratings: [],
   comments: [{
@@ -125,20 +140,29 @@ var CommentSchema = new Schema({
   location: {
     type: String,
     ref: 'Location',
-    required : true
+    required: true
   },
-  comment: { type : String, required : true },
-  created: { type : Date, required : true },
-  lastUpdate: { type : Date, required : true },
+  comment: {
+    type: String,
+    required: true
+  },
+  created: {
+    type: Date,
+    required: true
+  },
+  lastUpdate: {
+    type: Date,
+    required: true
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required : true
+    required: true
   },
-  userInfo : {
+  userInfo: {
     picture: String,
     nickname: String,
-    link : String
+    link: String
   }
 });
 
@@ -159,7 +183,7 @@ var UserSchema = new Schema({
   publicInfo: {
     picture: String,
     nickname: String,
-    link : String
+    link: String
   },
   ratings: [{
     type: Schema.Types.ObjectId,
