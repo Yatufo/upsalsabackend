@@ -12,7 +12,7 @@ exports.create = function(req, res) {
     if (err) {
       res.status(500).send(err);
     }
-    res.status(200).send(locationData);
+    res.status(201).send(locationData);
   });
 };
 

@@ -9,6 +9,9 @@ var EventSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Location'
   },
+  images : [{
+    url : String
+  }],
   sync: {
     uid: {
       type: String,
@@ -16,7 +19,6 @@ var EventSchema = new Schema({
     },
     lastUpdate: Date
   },
-  timeZone: String,
   start: {
     dateTime: Date
   },
@@ -28,7 +30,12 @@ var EventSchema = new Schema({
   categories: [{
     type: String,
     ref: 'Category'
-  }]
+  }],
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required : true
+  }
 });
 
 EventSchema.virtual('duration').get(function() {
