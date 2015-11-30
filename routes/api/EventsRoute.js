@@ -24,46 +24,14 @@ exports.search = function(req, res) {
     }
   }
 
-  var callPaginationData = function(callback) {
-    data.Event.aggregate([{
-        $match: conditions
-      }, {
-        $unwind: "$categories"
-      }, {
-        $group: {
-          _id: null,
-          eventsCategories: {
-            $addToSet: "$categories"
-          }
-        }
-      }],
-      callback)
-  }
-
-  var callEventsQuery = function(callback) {
-
-    data.Event.find()
-      .where(conditions)
-      .populate('location')
-      .limit(ctx.EVENTS_MAXRESULTS)
-      .sort('-start.dateTime')
-      .exec(callback);
-  }
-
-  async.parallel([callPaginationData, callEventsQuery],
-    function(err, results) {
-      if (err) {
-        throw err;
-      }
-
-      var combined = results[0][0];
-      if (combined) {
-        combined.events = results[1];
-      }
-
-      res.send(combined);
+  data.Event.find()
+    .where(conditions)
+    .limit(ctx.EVENTS_MAXRESULTS)
+    .sort('-start.dateTime')
+    .exec(function(e, events) {
+      if (e) throw e;
+      res.status(200).send(events);
     });
-
 
 };
 
@@ -159,8 +127,8 @@ exports.create = function(req, res) {
     .then(function(user) {
       newEvent.createdBy = user.id;
 
-      if(newEvent.images){
-        newEvent.images.forEach(function (image) {
+      if (newEvent.images) {
+        newEvent.images.forEach(function(image) {
           image.createdBy = user.id
         })
       }
