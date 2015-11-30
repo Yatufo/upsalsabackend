@@ -151,14 +151,21 @@ exports.findById = function(req, res) {
 //
 //
 exports.create = function(req, res) {
-  console.log(req);
-  var userId = req.user.sub;
 
+  var userId = req.user.sub;
+  var newEvent = req.body;
   usersRoute
     .findById(userId)
     .then(function(user) {
-      req.body.createdBy = user.id;
-      var eventsData = new data.Event(req.body);
+      newEvent.createdBy = user.id;
+
+      if(newEvent.images){
+        newEvent.images.forEach(function (image) {
+          image.createdBy = user.id
+        })
+      }
+
+      var eventsData = new data.Event(newEvent);
       eventsData.save(function(err) {
         if (err) {
           res.status(500).send(err);
