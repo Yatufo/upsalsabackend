@@ -1,4 +1,5 @@
 //Config for the app
+var _ = require('underscore-node');
 var async = require('async');
 var data = require('../model/core-data.js');
 var ctx = require('../util/conf.js').context();
@@ -9,20 +10,8 @@ var upload = require('./UploadRoute.js');
 //
 exports.search = function(req, res) {
 
-  var filters = getFiltersByCategories(req.query.categories);
+  var conditions = getFiltersByCategories(req.query.categories);
 
-
-  var conditions = {
-    "start.dateTime": {
-      $lt: filters.time.max
-    },
-    "end.dateTime": {
-      $gt: filters.time.min,
-    },
-    "categories": {
-      $all: filters.categories // TODO: For now it only supports querying with at least one category.
-    }
-  }
 
   data.Event.find()
     .where(conditions)
@@ -58,8 +47,17 @@ var getFiltersByCategories = function(categories) {
     filters.time = getTimeFilter();
   }
 
-
-  return filters;
+  return {
+    "start.dateTime": {
+      $lt: filters.time.max
+    },
+    "end.dateTime": {
+      $gt: filters.time.min,
+    },
+    "categories": {
+      $all: filters.categories // TODO: For now it only supports querying with at least one category.
+    }
+  };
 }
 
 var getTimeFilter = (function(happensOn) {
@@ -146,10 +144,14 @@ exports.create = function(req, res) {
 
 
 exports.findByLocationId = function(req, res) {
+  var categories = getFiltersByCategories(req.query.categories);
 
-  data.Event.find({
-      "location.id": req.params.id
-    })
+  var conditions = _.extend(categories, {
+    "location.id": req.params.id
+  });
+
+  data.Event.find()
+    .where(conditions)
     .limit(ctx.EVENTS_MAXRESULTS)
     .sort('-start.dateTime')
     .exec(function(err, singleEvent) {

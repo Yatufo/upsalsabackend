@@ -20,7 +20,8 @@
     "passport": "^0.2.2",
     "prerender-node": "latest",
     "promise": "^7.0.3",
-    "rrule": "^2.1.0"
+    "rrule": "^2.1.0",
+    "underscore-node": "^0.1.2"
   },
   "devDependencies": {
     "grunt-cli": "latest",
