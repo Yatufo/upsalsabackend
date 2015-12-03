@@ -13,7 +13,7 @@ echo "START Importing"
 
 
 echo "Importing categories: "
-mongoimport -h localhost:27017 -c categories -d upsalsa --file init/categories.json
+mongoimport -h localhost:27017 -c categories --file init/categories.json
 
 echo "Importing locations: "
 node init/LocationsImportFromCSV.js
