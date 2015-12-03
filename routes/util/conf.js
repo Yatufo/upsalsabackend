@@ -38,7 +38,6 @@
        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "NM7FztTQ5Rpyg3tacylvQC0j76AInZQksnNx74JI",
        region : 'us-east-1'
      },
-     SIMULATED_NOW: "2015-11-29T19:00:00-05:00",
      CALENDAR_ID: "project.demonio@gmail.com",
      EVENTS_MAXRESULTS: 200,
      EVENT_SEARCH_TIMEMAX: 7 * 24 * 60 * 60 * 1000,

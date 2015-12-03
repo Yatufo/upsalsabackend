@@ -62,7 +62,7 @@ var getFiltersByCategories = function(categories) {
 
 var getTimeFilter = (function(happensOn) {
   var time = {};
-  time.min = (ctx.SIMULATED_NOW ? new Date(ctx.SIMULATED_NOW) : new Date());
+  time.min = new Date();
   time.max = new Date(time.min);
   time.max.setHours(0);
 
@@ -107,7 +107,6 @@ var getTimeFilter = (function(happensOn) {
 exports.findById = function(req, res) {
 
   data.Event.findById(req.params.id)
-    .populate('location')
     .exec(function(err, singleEvent) {
       res.send(singleEvent);
     });
@@ -182,8 +181,6 @@ exports.addImage = function(req, res) {
     usersRoute
       .findById(userId)
       .then(function(user) {
-
-        console.log(user);
 
         data.Event.findOneAndUpdate({
           _id: eventId
