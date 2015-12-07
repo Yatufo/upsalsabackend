@@ -48,7 +48,7 @@ var res = {
 
         previousResult.forEach(function(list, index) {
             if (list.length >= 4) {
-                console.log(list.join('/'));
+                console.log(list.join('-'));
             }
         });
     })

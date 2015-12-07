@@ -47,9 +47,17 @@ docker build -t upsalsa/upsalsa-api .
 
 To run in develop the only thing that changes is the db
 
+
 ```
-docker run -d --name upsalsa-api
--e "DEPLOY_ENVIRONMENT=prod"
- -e "MONGO_CONNECTION=$MONGO_CONNECTION"
- -p 3002:5000 upsalsa/upsalsa-api
+export AWS_ACCESS_KEY_ID=AKIAIMKUJAVKMMFQDQYA
+export AWS_SECRET_ACCESS_KEY=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
+```
+
+```
+docker run -d --name upsalsa-api \
+-e "DEPLOY_ENVIRONMENT=dev" \
+-e "MONGO_CONNECTION=mongodb://api:api@ds053794.mongolab.com:53794/upsalsa-dev" \
+-e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+-e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+-p 3002:3002 upsalsa/upsalsa-api
 ```
