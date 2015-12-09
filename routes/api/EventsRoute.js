@@ -16,7 +16,7 @@ exports.search = function(req, res) {
   data.Event.find()
     .where(conditions)
     .limit(ctx.EVENTS_MAXRESULTS)
-    .sort('-start.dateTime')
+    .sort('start.dateTime')
     .exec(function(e, events) {
       if (e) throw e;
       res.status(200).send(events);
@@ -152,7 +152,7 @@ exports.findByLocationId = function(req, res) {
   data.Event.find()
     .where(conditions)
     .limit(ctx.EVENTS_MAXRESULTS)
-    .sort('-start.dateTime')
+    .sort('start.dateTime')
     .exec(function(err, singleEvent) {
       res.send(singleEvent);
     });
