@@ -1,0 +1,25 @@
+backend:
+  build: .
+  environment:
+    DEPLOY_ENVIRONMENT: "dev"
+    MONGO_CONNECTION: "mongodb://api:api@ds053794.mongolab.com:53794/upsalsa-dev"
+    AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+    AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+  net: "${BACKEND_NETWORK}"
+  container_name: "backend"
+images:
+  environment:
+    AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+    AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+    AWS_REGION: us-east-1
+    S3_BUCKET: salsa.local
+  image: brendanyounger/image-resizer
+  net: "${BACKEND_NETWORK}"
+  container_name: "images"
+nginx:
+  build: ./nginx
+  environment:
+    FRONTEND_SERVER: "${FRONTEND_SERVER}"
+  ports:
+    - "3002:80"
+  net: "${BACKEND_NETWORK}"
