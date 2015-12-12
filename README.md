@@ -61,3 +61,23 @@ docker run -d --name upsalsa-api \
 -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
 -p 3002:3002 upsalsa/upsalsa-api
 ```
+
+
+#### Using the api
+
+```
+curl -i -v -X POST 'http://salsa.local:3002/api/locations' \
+-H "Content-Type: application/json" \
+-H 'Cookie: __atssc=facebook%3B1; _gat=1; _ga=GA1.2.1315962730.1446769217; __atuvc=7%7C46%2C13%7C47%2C2%7C48%2C8%7C49; __atuvs=56677ebae985d91a005' \
+-d '{
+  "id": "bailacongustomontreal",
+  "name": "Baila Con Gusto",
+  "address": "9 Ste-Catherine Est (coin St-Laurent), 2e, Montreal, Quebec",
+  "url": "https://www.facebook.com/bailacongustomontreal",
+  "phone": "5144393990",
+  "coordinates": {
+    "latitude": 45.51002356779,
+    "longitude": -73.563711227797
+  }
+}'
+```
