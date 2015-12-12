@@ -1,8 +1,14 @@
+mongo:
+  image: mongo
+  ports :
+    - "27017:27017"
+  net: "${BACKEND_NETWORK}"
+  container_name: mongo
 backend:
   build: .
   environment:
     DEPLOY_ENVIRONMENT: "dev"
-    MONGO_CONNECTION: "mongodb://api:api@ds053794.mongolab.com:53794/upsalsa-dev"
+    MONGO_CONNECTION: "mongodb://mongo:27017"
     AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
     AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
   net: "${BACKEND_NETWORK}"
@@ -17,7 +23,7 @@ images:
   net: "${BACKEND_NETWORK}"
   container_name: "images"
 nginx:
-  build: ./nginx
+  image: upsalsa/nginx
   environment:
     FRONTEND_SERVER: "${FRONTEND_SERVER}"
   ports:
