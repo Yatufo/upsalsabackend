@@ -1,5 +1,5 @@
 #### Install 3rd party Software
-* [MondoDB](https://www.mongodb.org/)
+* [Docker](https://www.docker.com/)
 * [Node](https://nodejs.org/en/download/)
 
 #### Install dependencies.
@@ -9,20 +9,15 @@ From the root folder:
 ```npm install```
 
 This will also resolve the client dependencies and do other setup tasks, check package.json.
+It will start the mongo docker container.
 
 
-
-#### Initialize the database.
-
-Define your mongo database url connection:
+[OPTIONAL] Define your mongo database url connection:
 
 ```
 export MONGO_CONNECTION=mongodb://api:api@ds053794.mongolab.com:53794/upsalsa-dev
 ```
-or
-```
-export MONGO_CONNECTION=mongodb://localhost:27017
-```
+
 
 Start initialization
 

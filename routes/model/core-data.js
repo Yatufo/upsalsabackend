@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 
 var EventSchema = new Schema({
   name: String,
+  description: String,
   location: {
     id: {
       type: String,
@@ -91,6 +92,7 @@ var LocationSchema = new Schema({
     type: String,
     index: true
   },
+  description: String,
   name: String,
   address: String,
   url: String,

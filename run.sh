@@ -1,11 +1,7 @@
 #!/bin/bash
 
 initialize() {
-  rm -rf data/db &&
-  mkdir -p data/db &&
-  mongod --dbpath=data/db &
-  ./init/init.sh &&
-  pkill -f "mongod --dbpath=data/db"
+  ./init/init.sh
 }
 COL_BLUE="\x1b[34;01m"
 COL_RESET="\x1b[39;49;00m"
@@ -21,15 +17,14 @@ start() {
      echo "######################################################################"
      echo -e $COL_BLUE"Starting the server in DEVELOPMENT mode"$COL_RESET""
      echo "######################################################################"
-     nodemon server.js &
-     mongod --dbpath=data/db
+     nodemon server.js
    fi
 }
 
 stop() {
     pkill -f "nodemon server.js"
     pkill -f "grunt watch"
-    pkill -f "mongod --dbpath=data/db"
+    pkill -f "docker stop backend_mongo"
 }
 
 case "$1" in

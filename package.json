@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "./run.sh"
+    "start": "./run.sh",
+    "postinstall": "docker run mongo -p 27017:27017 -name backend_mongo"
   },
   "dependencies": {
     "async": "^0.9.0",
