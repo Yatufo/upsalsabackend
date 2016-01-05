@@ -42,6 +42,7 @@ app.post('/api/events', auth, events.create);
 app.post('/api/events/:id/images', auth, events.addImage);
 app.get('/api/categories', categories.findAll);
 app.post('/api/locations', auth, locations.create);
+app.put('/api/locations/:id', auth, locations.update);
 app.get('/api/locations', locations.findAll);
 app.get('/api/locations/:id', locations.findById);
 app.delete('/api/locations/:id', auth, locations.delete);

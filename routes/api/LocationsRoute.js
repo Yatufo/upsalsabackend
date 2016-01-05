@@ -43,7 +43,7 @@ exports.delete = function(req, res) {
     .findById(userId)
     .then(function(user) {
 
-    
+
     data.Location.findOneAndRemove({ _id: locationId, createdBy: user.id}, function(e, deleted) {
       if (e) throw e;
 
@@ -57,6 +57,31 @@ exports.delete = function(req, res) {
   });
 };
 
+//
+//
+exports.update = function(req, res) {
+  var userId = req.user.sub;
+  var locationId = req.params.id;
+  var newLocation = req.body;
+
+  usersRoute
+    .findById(userId)
+    .then(function(user) {
+
+
+      newLocation.createdBy = user.id;
+      data.Location.findOneAndUpdate({ _id: locationId, createdBy: user.id}, newLocation, function(e, modified) {
+        if (e) throw e;
+
+        if (modified) {
+          res.send(modified);
+        } else {
+          res.status(404).send();
+        }
+      });
+
+  });
+};
 
 //
 //

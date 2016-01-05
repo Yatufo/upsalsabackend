@@ -66,7 +66,24 @@ curl -i -v -X POST 'http://salsa.local:6666/api/locations' \
   }
 }'
 ```
+### Update location
 
+```
+curl -i -v -X PUT 'http://salsa.local:6666/api/locations/568c3f24f9479d11176fa6b0' \
+-H "Content-Type: application/json" \
+-H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Vwc2Fsc2EuYXV0aDAuY29tLyIsInN1YiI6ImZhY2Vib29rfDEwMTUzMTI3ODA4MjEzMDIxIiwiYXVkIjoiek5oWTV3ZXNXbzhpVk1zZFJZYk02VlZYemVNanRzMHgiLCJleHAiOjE0NTIwNjQwNzIsImlhdCI6MTQ1MjAyODA3Mn0.y71Wn9JKWwOcJWexzTVkli-0v7spAmVLOldLL6jJhaY' \
+-d '{
+  "id": "id",
+  "name": "name",
+  "address": "address",
+  "url": "url",
+  "phone": "phone",
+  "coordinates": {
+    "latitude": 0,
+    "longitude": 1
+  }
+}'
+```
 ### Delete location
 
 ```
