@@ -1,18 +1,59 @@
 var data = require('../model/core-data.js');
 var upload = require('./UploadRoute.js');
 var ctx = require('../util/conf.js').context();
-
+var usersRoute = require('./UsersRoute.js');
 
 //
 //
 exports.create = function(req, res) {
 
-  var locationData = new data.Location(req.body);
-  locationData.save(function(err) {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.status(201).send(locationData);
+
+  var userId = req.user.sub;
+  var newLocation = req.body;
+
+
+  usersRoute
+    .findById(userId)
+    .then(function(user) {
+      newLocation.createdBy = user.id;
+
+
+      var locationData = new data.Location(newLocation);
+      locationData.save(function(e, saved) {
+        if (e) throw e;
+
+        res.status(201).send(saved);
+      });
+
+  });
+
+
+};
+
+
+
+
+//
+//
+exports.delete = function(req, res) {
+  var userId = req.user.sub;
+  var locationId = req.params.id;
+
+  usersRoute
+    .findById(userId)
+    .then(function(user) {
+
+    
+    data.Location.findOneAndRemove({ _id: locationId, createdBy: user.id}, function(e, deleted) {
+      if (e) throw e;
+
+      if (deleted) {
+        res.send(deleted);
+      } else {
+        res.status(404).send();
+      }
+    });
+
   });
 };
 
@@ -63,16 +104,18 @@ exports.addImage = function(req, res) {
 
     if (!(userId && locationId && imageUrl)) {
       console.error("Invalid image parameters ", userId, locationId, imageUrl);
-      res.status(500).send({ "messages" : ["Could not save the image"]})
+      res.status(500).send({
+        "messages": ["Could not save the image"]
+      })
       return
     }
 
     var savedImage = {
       url: imageUrl,
       owner: userId,
-      created : new Date()
+      created: new Date()
     }
-    console.log(locationId);
+
     data.Location.findOneAndUpdate({
       id: locationId
     }, {

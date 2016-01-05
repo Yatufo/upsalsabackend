@@ -111,7 +111,12 @@ var LocationSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Comment'
   }],
-  score: Number
+  score: Number,
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
 });
 
 var RatingSchema = new Schema({
