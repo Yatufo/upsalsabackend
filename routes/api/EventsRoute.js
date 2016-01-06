@@ -84,6 +84,63 @@ exports.create = function(req, res) {
 };
 
 
+
+//
+//
+exports.delete = function(req, res) {
+  var userId = req.user.sub;
+  var eventId = req.params.id;
+
+  usersRoute
+    .findById(userId)
+    .then(function(user) {
+
+
+    data.Event.findOneAndRemove({ _id: eventId, createdBy: user.id}, function(e, deleted) {
+      if (e) throw e;
+
+      if (deleted) {
+        res.send(deleted);
+      } else {
+        res.status(404).send();
+      }
+    });
+
+  });
+};
+
+//
+//
+exports.update = function(req, res) {
+  var userId = req.user.sub;
+  var eventId = req.params.id;
+  var newEvent = req.body;
+
+  usersRoute
+    .findById(userId)
+    .then(function(user) {
+
+
+      newEvent.createdBy = user.id;
+      data.Event.findOneAndUpdate({ _id: eventId, createdBy: user.id}, newEvent, function(e, modified) {
+        if (e) throw e;
+
+        if (modified) {
+          res.send(modified);
+        } else {
+          res.status(404).send();
+        }
+      });
+
+  });
+};
+
+
+
+
+
+
+
 exports.findByLocationId = function(req, res) {
   var categories = getFiltersByCategories(req.query.categories);
 

@@ -23,8 +23,6 @@ start() {
 
 stop() {
     pkill -f "nodemon server.js"
-    pkill -f "grunt watch"
-    pkill -f "docker stop backend_mongo"
 }
 
 case "$1" in

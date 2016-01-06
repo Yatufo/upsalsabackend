@@ -39,6 +39,8 @@ app.use(compression());
 app.get('/api/events', events.search);
 app.get('/api/events/:id', events.findById);
 app.post('/api/events', auth, events.create);
+app.put('/api/events/:id', auth, events.update);
+app.delete('/api/events/:id', auth, events.delete);
 app.post('/api/events/:id/images', auth, events.addImage);
 app.get('/api/categories', categories.findAll);
 app.post('/api/locations', auth, locations.create);
