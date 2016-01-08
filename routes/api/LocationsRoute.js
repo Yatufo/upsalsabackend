@@ -135,22 +135,28 @@ exports.addImage = function(req, res) {
       return
     }
 
-    var savedImage = {
-      url: imageUrl,
-      owner: userId,
-      created: new Date()
-    }
+    usersRoute
+      .findById(userId)
+      .then(function(user) {
 
-    data.Location.findOneAndUpdate({
-      id: locationId
-    }, {
-      $addToSet: {
-        images: savedImage
-      }
-    }, function(e, location) {
-      if (e) throw e;
+        var savedImage = {
+          url: imageUrl,
+          createdBy: user.id,
+          created: new Date()
+        }
 
-      res.status(201).send(location);
+        data.Location.findOneAndUpdate({
+          id: locationId
+        }, {
+          $addToSet: {
+            images: savedImage
+          }
+        }, function(e, location) {
+          if (e) throw e;
+
+          res.status(201).send(savedImage);
+        });
+
     });
 
   });

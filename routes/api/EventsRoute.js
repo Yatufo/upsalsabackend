@@ -177,22 +177,26 @@ exports.addImage = function(req, res) {
 
 
 
+
     usersRoute
       .findById(userId)
       .then(function(user) {
+
+        var savedImage = {
+          url: imageUrl,
+          createdBy: user.id,
+          created: new Date()
+        }
 
         data.Event.findOneAndUpdate({
           _id: eventId
         }, {
           $addToSet: {
-            images: {
-              url: imageUrl,
-              createdBy: user.id,
-            }
+            images: savedImage
           }
-        }, function(e, location) {
+        }, function(e, event) {
           if (e) throw e;
-          res.status(201).send(location);
+          res.status(201).send(savedImage);
         });
       });
 

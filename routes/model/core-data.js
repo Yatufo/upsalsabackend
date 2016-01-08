@@ -22,11 +22,12 @@ var EventSchema = new Schema({
   },
   images: [{
     url: String,
-    createdBy : {
+    createdBy: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true
-    }
+    },
+    created: Date
   }],
   sync: {
     uid: {
@@ -103,7 +104,11 @@ var LocationSchema = new Schema({
   },
   images: [{
     url: String,
-    owner: String, //TODO: use the ObjectId of the user.
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
     created: Date
   }],
   ratings: [],
