@@ -17,6 +17,7 @@ exports.create = function(req, res) {
     .then(function(user) {
       newLocation.createdBy = user.id;
 
+      newLocation.id = newLocation.name.replace(' ', '');
 
       var locationData = new data.Location(newLocation);
       locationData.save(function(e, saved) {
