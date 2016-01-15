@@ -24,9 +24,9 @@ var upload = multer.single("image");
 
 exports.uploadImage = function(req, res, next) {
 
-  upload(req, res, function(err) {
-    if (err) {
-      throw err;
+  upload(req, res, function(e) {
+    if (e) {
+      next(e);
     }
 
     next(req.NEW_FILE_NAME);

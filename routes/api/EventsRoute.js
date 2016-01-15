@@ -9,7 +9,7 @@ var upload = require('./UploadRoute.js');
 
 //
 //
-exports.search = function(req, res) {
+exports.search = function(req, res, next) {
 
   var conditions = getFiltersByCategories(req.query.categories);
 
@@ -19,7 +19,7 @@ exports.search = function(req, res) {
     .limit(ctx.EVENTS_MAXRESULTS)
     .sort('start.dateTime')
     .exec(function(e, events) {
-      if (e) throw e;
+      if (e) next(e);
       res.status(200).send(events);
     });
 
@@ -97,7 +97,7 @@ exports.delete = function(req, res) {
 
 
     data.Event.findOneAndRemove({ _id: eventId, createdBy: user.id}, function(e, deleted) {
-      if (e) throw e;
+      if (e) next(e);
 
       if (deleted) {
         res.send(deleted);
@@ -123,7 +123,7 @@ exports.update = function(req, res) {
 
       newEvent.createdBy = user.id;
       data.Event.findOneAndUpdate({ _id: eventId, createdBy: user.id}, newEvent, function(e, modified) {
-        if (e) throw e;
+        if (e) next(e);
 
         if (modified) {
           res.send(modified);
@@ -195,7 +195,7 @@ exports.addImage = function(req, res) {
             images: savedImage
           }
         }, function(e, event) {
-          if (e) throw e;
+          if (e) next(e);
           res.status(201).send(savedImage);
         });
       });

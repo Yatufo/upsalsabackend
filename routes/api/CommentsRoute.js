@@ -4,7 +4,7 @@ var data = require('../model/core-data.js');
 var usersRoute = require('./UsersRoute.js');
 var commentCollector = require('../collectors/CommentCollector.js');
 
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
   var userId = req.user.sub;
 
   usersRoute
@@ -16,7 +16,7 @@ exports.create = function(req, res) {
       commentData.user = user._id;
       commentData.userInfo = user.publicInfo;
       commentData.save(function(e) {
-        if (e) throw e;
+        if (e) next(e);
 
         res.location('/api/comments/' + commentData.id)
         res.status(201).send(commentData);
@@ -30,7 +30,7 @@ exports.create = function(req, res) {
 
 //
 //allows a user to modify her own comments.
-exports.update = function(req, res) {
+exports.update = function(req, res, next) {
   var userId = req.user.sub;
 
   usersRoute
@@ -45,7 +45,7 @@ exports.update = function(req, res) {
           comment: req.body.comment
         }
       }, function(e, commentData) {
-        if (e) throw e;
+        if (e) next(e);
 
         res.status(204).send();
       });

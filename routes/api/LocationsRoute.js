@@ -5,7 +5,7 @@ var usersRoute = require('./UsersRoute.js');
 
 //
 //
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
 
 
   var userId = req.user.sub;
@@ -17,11 +17,17 @@ exports.create = function(req, res) {
     .then(function(user) {
       newLocation.createdBy = user.id;
 
-      newLocation.id = newLocation.name.replace(' ', '');
+      if(newLocation.images){
+        newLocation.images.forEach(function (image) {
+          image.createdBy = user.id;
+          image.created = new Date();
+        })
+      }
 
+      newLocation.id = newLocation.name.replace(' ', '');
       var locationData = new data.Location(newLocation);
       locationData.save(function(e, saved) {
-        if (e) throw e;
+        if (e) next(e);
 
         res.status(201).send(saved);
       });
@@ -36,7 +42,7 @@ exports.create = function(req, res) {
 
 //
 //
-exports.delete = function(req, res) {
+exports.delete = function(req, res, next) {
   var userId = req.user.sub;
   var locationId = req.params.id;
 
@@ -46,7 +52,7 @@ exports.delete = function(req, res) {
 
 
     data.Location.findOneAndRemove({ _id: locationId, createdBy: user.id}, function(e, deleted) {
-      if (e) throw e;
+      if (e) next(e);
 
       if (deleted) {
         res.send(deleted);
@@ -60,7 +66,7 @@ exports.delete = function(req, res) {
 
 //
 //
-exports.update = function(req, res) {
+exports.update = function(req, res, next) {
   var userId = req.user.sub;
   var locationId = req.params.id;
   var newLocation = req.body;
@@ -72,7 +78,7 @@ exports.update = function(req, res) {
 
       newLocation.createdBy = user.id;
       data.Location.findOneAndUpdate({ _id: locationId, createdBy: user.id}, newLocation, function(e, modified) {
-        if (e) throw e;
+        if (e) next(e);
 
         if (modified) {
           res.send(modified);
@@ -121,7 +127,7 @@ exports.findById = function(req, res) {
 
 
 
-exports.addImage = function(req, res) {
+exports.addImage = function(req, res, next) {
   var userId = req.user.sub;
   var locationId = req.params.id;
 
@@ -153,7 +159,7 @@ exports.addImage = function(req, res) {
             images: savedImage
           }
         }, function(e, location) {
-          if (e) throw e;
+          if (e) next(e);
 
           res.status(201).send(savedImage);
         });

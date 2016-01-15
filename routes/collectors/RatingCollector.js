@@ -34,10 +34,10 @@ var updateUserRatings = function(rating) {
 
   var updateUser = function(userRatings) {
     data.User.findById(rating.user, function(e, user) {
-      if (e) throw e;
+      if (e) next(e);
       user.ratings = userRatings;
       user.save(function(e) {
-        if (e) throw e;
+        if (e) next(e);
       })
     });
   }
@@ -70,7 +70,7 @@ var crunchRatingData = function(match, done) {
       }
     })
     .exec(function(e, results) {
-      if (e) throw e;
+      if (e) next(e);
       var ratings = {}
       results.forEach(function(result) {
         var summary = ratings[result._id.category] || {

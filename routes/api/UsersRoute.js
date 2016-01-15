@@ -42,7 +42,7 @@ exports.findCurrent = function(req, res) {
 };
 //
 //
-exports.findOrCreate = function(req, res) {
+exports.findOrCreate = function(req, res, next) {
   var userId = req.user.sub;
   var done = function(user) {
     res.send(user);
@@ -62,7 +62,7 @@ exports.findOrCreate = function(req, res) {
       createUser(newUser)
         .then(done)
         .catch(function(e) {
-          throw e;
+          next(e);
         })
     });
 
