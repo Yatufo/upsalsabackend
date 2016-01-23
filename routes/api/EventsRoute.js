@@ -84,7 +84,7 @@ exports.create = function(req, res, next) {
 
       Promise.all(savePromises)
       .then(function(values) {
-        res.status(201).send(values);
+        res.status(201).send(values[0]);
       }).catch(function(e) {
         next(e);
       });
@@ -96,7 +96,7 @@ exports.create = function(req, res, next) {
 function getEventDatas(event) {
   var result = [];
 
-  if (_.isObject(event.recurrence) && _.isObject(event.recurrence.rule)) {
+  if (_.isObject(event.recurrence) && event.recurrence.rule) {
 
     var duration = moment(event.end.dateTime).diff(event.start.dateTime);
     var rule = RRule.fromString(event.recurrence.rule);
