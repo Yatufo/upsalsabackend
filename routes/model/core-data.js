@@ -20,6 +20,10 @@ var EventSchema = new Schema({
       latitude: Number
     }
   },
+  recurrence: {
+    rule: String,
+    id: Schema.Types.ObjectId
+  },
   images: [{
     url: String,
     createdBy: {
@@ -42,7 +46,6 @@ var EventSchema = new Schema({
   end: {
     dateTime: Date
   },
-  recurrence: [String],
   sequence: Number,
   categories: [{
     type: String,
@@ -210,6 +213,7 @@ exports.Category = mongoose.model('Category', CategorySchema);
 exports.Event = mongoose.model('Event', EventSchema);
 exports.Location = mongoose.model('Location', LocationSchema);
 exports.User = mongoose.model('User', UserSchema);
+exports.ObjectId = mongoose.Types.ObjectId;
 
 exports.connect = function() {
   mongoose.connect(ctx.MONGO_CONNECTION);

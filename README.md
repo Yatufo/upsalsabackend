@@ -53,7 +53,7 @@ To run in develop the only thing that changes is the db
 ```
 curl -i -v -X POST 'http://salsa.local:6666/api/locations' \
 -H "Content-Type: application/json" \
--H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Vwc2Fsc2EuYXV0aDAuY29tLyIsInN1YiI6ImZhY2Vib29rfDEwMTUzMTI3ODA4MjEzMDIxIiwiYXVkIjoiek5oWTV3ZXNXbzhpVk1zZFJZYk02VlZYemVNanRzMHgiLCJleHAiOjE0NTIwNjQwNzIsImlhdCI6MTQ1MjAyODA3Mn0.y71Wn9JKWwOcJWexzTVkli-0v7spAmVLOldLL6jJhaY' \
+-H 'Authorization: Bearer {{token}}' \
 -d '{
   "id": "mounayasalsa",
   "name": "Mounaya Salsa",
@@ -71,7 +71,7 @@ curl -i -v -X POST 'http://salsa.local:6666/api/locations' \
 ```
 curl -i -v -X PUT 'http://salsa.local:6666/api/locations/568c3f24f9479d11176fa6b0' \
 -H "Content-Type: application/json" \
--H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Vwc2Fsc2EuYXV0aDAuY29tLyIsInN1YiI6ImZhY2Vib29rfDEwMTUzMTI3ODA4MjEzMDIxIiwiYXVkIjoiek5oWTV3ZXNXbzhpVk1zZFJZYk02VlZYemVNanRzMHgiLCJleHAiOjE0NTIwNjQwNzIsImlhdCI6MTQ1MjAyODA3Mn0.y71Wn9JKWwOcJWexzTVkli-0v7spAmVLOldLL6jJhaY' \
+-H 'Authorization: Bearer {{token}}' \
 -d '{
   "id": "id",
   "name": "name",
@@ -88,5 +88,40 @@ curl -i -v -X PUT 'http://salsa.local:6666/api/locations/568c3f24f9479d11176fa6b
 
 ```
 curl -i -v -X DELETE 'http://salsa.local:6666/api/locations/568c36d5542281c61092a91b' \
--H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Vwc2Fsc2EuYXV0aDAuY29tLyIsInN1YiI6ImZhY2Vib29rfDEwMTUzMTI3ODA4MjEzMDIxIiwiYXVkIjoiek5oWTV3ZXNXbzhpVk1zZFJZYk02VlZYemVNanRzMHgiLCJleHAiOjE0NTIwNjQwNzIsImlhdCI6MTQ1MjAyODA3Mn0.y71Wn9JKWwOcJWexzTVkli-0v7spAmVLOldLL6jJhaY'
+-H 'Authorization: Bearer {{token}}'
 ```
+
+
+### Create Event
+
+```
+curl 'http://salsa.local:6666/api/events' \
+-H 'Authorization: Bearer {{token}}' \
+-H 'Content-Type: application/json;charset=UTF-8' \
+--data-binary '{
+  "location": {
+    "id": "airdetango",
+    "name": "Air de tango",
+    "address": "4324 St Laurent 2nd floor, Montreal, QC H2W 1Z3 ",
+    "url": "http://airdetango.com/",
+    "phone": "5142788781",
+    "coordinates": {
+      "latitude": 45.519077,
+      "longitude": -73.584084
+    }
+  },
+  "description": "#advanced asdfas",
+  "categories": ["advanced"],
+  "images": [],
+  "imageUrl": "images/w640-h400-cscale/images/locations/montreal.jpg",
+  "start": {
+    "dateTime": "2016-01-23T19:00:00.000Z"
+  },
+  "recurrence": {
+    "rule": "FREQ=DAILY;COUNT=2;BYDAY=TU,WE;DTSTART=20160123T190000Z"
+  },
+  "end": {
+    "dateTime": "2016-01-23T20:00:00.000Z"
+  },
+  "name": "asdfasdfa"
+}'```

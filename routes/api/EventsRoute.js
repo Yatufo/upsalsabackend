@@ -6,6 +6,9 @@ var data = require('../model/core-data.js');
 var ctx = require('../util/conf.js').context();
 var usersRoute = require('./UsersRoute.js');
 var upload = require('./UploadRoute.js');
+var RRule = require('rrule').RRule;
+var Promise = require('promise');
+
 
 //
 //
@@ -57,10 +60,12 @@ exports.findById = function(req, res) {
 
 //
 //
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
 
   var userId = req.user.sub;
   var newEvent = req.body;
+
+
   usersRoute
     .findById(userId)
     .then(function(user) {
@@ -71,19 +76,56 @@ exports.create = function(req, res) {
           image.createdBy = user.id
         })
       }
+      var eventDatas = getEventDatas(newEvent);
 
-      var eventsData = new data.Event(newEvent);
-      eventsData.save(function(err) {
-        if (err) {
-          res.status(500).send(err);
-        }
-        res.status(201).send(eventsData);
+      var savePromises = eventDatas.map(function(eventData) {
+        return eventData.save();
+      })
+
+      Promise.all(savePromises)
+      .then(function(values) {
+        res.status(201).send(values);
+      }).catch(function(e) {
+        next(e);
       });
 
     });
 };
 
 
+function getEventDatas(event) {
+  var result = [];
+
+  if (_.isObject(event.recurrence) && _.isObject(event.recurrence.rule)) {
+
+    var duration = moment(event.end.dateTime).diff(event.start.dateTime);
+    var rule = RRule.fromString(event.recurrence.rule);
+    var recurrenceId = data.ObjectId();
+
+    result = rule.all().map(function(ruleStart) {
+      var recurentEvent = clone(event);
+
+      var startTime = moment(ruleStart);
+      var endTime = moment(startTime).add(duration, 'milliseconds');
+
+      recurentEvent.start.dateTime = startTime.toDate();
+      recurentEvent.end.dateTime = endTime.toDate();
+
+      var dataEvent = new data.Event(recurentEvent);
+      dataEvent.recurrence.id = recurrenceId;
+
+      return dataEvent;
+    });
+  } else {
+    result = [new data.Event(event)];
+  }
+
+  return result;
+}
+
+function clone(o) {
+  return JSON.parse(JSON.stringify(o));
+}
 
 //
 //
@@ -96,17 +138,20 @@ exports.delete = function(req, res) {
     .then(function(user) {
 
 
-    data.Event.findOneAndRemove({ _id: eventId, createdBy: user.id}, function(e, deleted) {
-      if (e) next(e);
+      data.Event.findOneAndRemove({
+        _id: eventId,
+        createdBy: user.id
+      }, function(e, deleted) {
+        if (e) next(e);
 
-      if (deleted) {
-        res.send(deleted);
-      } else {
-        res.status(404).send();
-      }
+        if (deleted) {
+          res.send(deleted);
+        } else {
+          res.status(404).send();
+        }
+      });
+
     });
-
-  });
 };
 
 //
@@ -122,7 +167,10 @@ exports.update = function(req, res) {
 
 
       newEvent.createdBy = user.id;
-      data.Event.findOneAndUpdate({ _id: eventId, createdBy: user.id}, newEvent, function(e, modified) {
+      data.Event.findOneAndUpdate({
+        _id: eventId,
+        createdBy: user.id
+      }, newEvent, function(e, modified) {
         if (e) next(e);
 
         if (modified) {
@@ -132,7 +180,7 @@ exports.update = function(req, res) {
         }
       });
 
-  });
+    });
 };
 
 
