@@ -98,30 +98,33 @@ curl -i -v -X DELETE 'http://salsa.local:6666/api/locations/568c36d5542281c61092
 curl 'http://salsa.local:6666/api/events' \
 -H 'Authorization: Bearer {{token}}' \
 -H 'Content-Type: application/json;charset=UTF-8' \
---data-binary '{
+--data-binary '
   "location": {
-    "id": "airdetango",
-    "name": "Air de tango",
-    "address": "4324 St Laurent 2nd floor, Montreal, QC H2W 1Z3 ",
-    "url": "http://airdetango.com/",
-    "phone": "5142788781",
+    "id": "GrooveN Kizomba",
+    "name": "Groove N Kizomba",
+    "address": "7474 Rue St-Hubert, Montreal, QC H2R 2N3, Canada",
+    "url": "http://place.com/event/1",
+    "phone": "5146854586",
     "coordinates": {
-      "latitude": 45.519077,
-      "longitude": -73.584084
+      "longitude": -73.61741689999997,
+      "latitude": 45.54253970000001
     }
   },
-  "description": "#advanced asdfas",
-  "categories": ["advanced"],
+  "description": "#bachata",
+  "categories": ["bachata"],
   "images": [],
   "imageUrl": "images/w640-h400-cscale/images/locations/montreal.jpg",
   "start": {
-    "dateTime": "2016-01-23T19:00:00.000Z"
+    "dateTime": "2016-01-26T22:00:00.000Z",
+    "timeZone": "America/New_York"
   },
   "recurrence": {
-    "rule": "FREQ=DAILY;COUNT=2;BYDAY=TU,WE;DTSTART=20160123T190000Z"
+    "rule": "FREQ=WEEKLY;COUNT=6;BYDAY=TU;DTSTART=20160126T220000Z"
   },
   "end": {
-    "dateTime": "2016-01-23T20:00:00.000Z"
+    "dateTime": "2016-01-26T23:00:00.000Z",
+    "timeZone": "America/New_York"
   },
-  "name": "asdfasdfa"
-}'```
+  "name": "Uno"
+}'
+```

@@ -2,7 +2,7 @@ var data = require('../model/core-data.js');
 
 //
 //
-exports.findAll = function(req, res) {
+exports.findAll = function(req, res, next) {
 
     data.Category.find()
         .select('id name categories parent')
@@ -10,8 +10,8 @@ exports.findAll = function(req, res) {
             path: 'categories',
             select: 'id name categories parent',
         })
-        .exec(function(err, categories) {
-            if (err) console.log(err);
+        .exec(function(e, categories) {
+            if (e) return next(e);
 
             res.send(categories);
         });

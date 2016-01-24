@@ -1,6 +1,6 @@
 //Config for the app
 var _ = require('underscore-node');
-var moment = require('moment');
+var moment = require('moment-timezone');
 var async = require('async');
 var data = require('../model/core-data.js');
 var ctx = require('../util/conf.js').context();
@@ -22,7 +22,7 @@ exports.search = function(req, res, next) {
     .limit(ctx.EVENTS_MAXRESULTS)
     .sort('start.dateTime')
     .exec(function(e, events) {
-      if (e) next(e);
+      if (e) return next(e);
       res.status(200).send(events);
     });
 
@@ -89,6 +89,8 @@ exports.create = function(req, res, next) {
         next(e);
       });
 
+    }).catch(function (e) {
+      next(e);
     });
 };
 
@@ -99,12 +101,16 @@ function getEventDatas(event) {
   if (_.isObject(event.recurrence) && event.recurrence.rule) {
 
     var duration = moment(event.end.dateTime).diff(event.start.dateTime);
-    var rule = RRule.fromString(event.recurrence.rule);
+
+    //Workaround since the rrule does not support timeZones https://github.com/jkbrzt/rrule/issues/38
+    var options = RRule.parseString(event.recurrence.rule)
+    options.dtstart = moment.tz(event.start.dateTime, event.start.timeZone).toDate();
+    var rule = new RRule(options)
+
     var recurrenceId = data.ObjectId();
 
     result = rule.all().map(function(ruleStart) {
       var recurentEvent = clone(event);
-
       var startTime = moment(ruleStart);
       var endTime = moment(startTime).add(duration, 'milliseconds');
 
@@ -142,7 +148,7 @@ exports.delete = function(req, res) {
         _id: eventId,
         createdBy: user.id
       }, function(e, deleted) {
-        if (e) next(e);
+        if (e) return next(e);
 
         if (deleted) {
           res.send(deleted);
@@ -151,7 +157,9 @@ exports.delete = function(req, res) {
         }
       });
 
-    });
+    }).catch(function (e) {
+      next(e);
+    });;
 };
 
 //
@@ -171,7 +179,7 @@ exports.update = function(req, res) {
         _id: eventId,
         createdBy: user.id
       }, newEvent, function(e, modified) {
-        if (e) next(e);
+        if (e) return next(e);
 
         if (modified) {
           res.send(modified);
@@ -180,7 +188,9 @@ exports.update = function(req, res) {
         }
       });
 
-    });
+    }).catch(function (e) {
+      next(e);
+    });;
 };
 
 
@@ -200,8 +210,10 @@ exports.findByLocationId = function(req, res) {
     .where(conditions)
     .limit(ctx.EVENTS_MAXRESULTS)
     .sort('start.dateTime')
-    .exec(function(err, singleEvent) {
-      res.send(singleEvent);
+    .exec(function(e, singleEvent) {
+      if(e) return next(e);
+
+      res.status(200).send(singleEvent);
     });
 };
 
@@ -213,11 +225,15 @@ exports.addImage = function(req, res) {
   var eventId = req.params.id;
 
 
-  upload.uploadImage(req, res, function(imageUrl) {
+  upload.uploadImage(req, res, function(e, imageUrl) {
+
+    if (e){
+      console.warn("Could not save the image", e);
+    }
 
     if (!(userId && eventId && imageUrl)) {
       console.error("Invalid image parameters ", userId, eventId, imageUrl);
-      res.status(500).send({
+      res.status(400).send({
         "messages": ["Could not save the image"]
       })
       return
@@ -243,9 +259,12 @@ exports.addImage = function(req, res) {
             images: savedImage
           }
         }, function(e, event) {
-          if (e) next(e);
+          if (e) return next(e);
+
           res.status(201).send(savedImage);
         });
+      }).catch(function (e) {
+        next(e);
       });
 
   });

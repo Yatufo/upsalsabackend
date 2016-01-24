@@ -16,7 +16,7 @@ exports.create = function(req, res, next) {
       commentData.user = user._id;
       commentData.userInfo = user.publicInfo;
       commentData.save(function(e) {
-        if (e) next(e);
+        if (e) return next(e);
 
         res.location('/api/comments/' + commentData.id)
         res.status(201).send(commentData);
@@ -45,7 +45,7 @@ exports.update = function(req, res, next) {
           comment: req.body.comment
         }
       }, function(e, commentData) {
-        if (e) next(e);
+        if (e) return next(e);
 
         res.status(204).send();
       });
