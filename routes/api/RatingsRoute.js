@@ -14,7 +14,7 @@ exports.create = function(req, res) {
       var ratingData = new data.Rating(req.body);
       ratingData.user = user._id;
       ratingData.save(function(e) {
-        if (e) next(e);
+        if (e) return next(e);
 
         res.location('/api/ratings/' + ratingData.id)
         res.status(201).send({
@@ -43,7 +43,7 @@ exports.update = function(req, res) {
           vote: req.body.vote
         }
       }, null, function(e, ratingData) {
-        if (e) next(e);
+        if (e) return next(e);
 
         res.status(204).send();
         ratingCollector.collect(ratingData);

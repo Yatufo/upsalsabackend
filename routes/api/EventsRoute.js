@@ -22,7 +22,7 @@ exports.search = function(req, res, next) {
     .limit(ctx.EVENTS_MAXRESULTS)
     .sort('start.dateTime')
     .exec(function(e, events) {
-      if (e) next(e);
+      if (e) return next(e);
       res.status(200).send(events);
     });
 
@@ -89,6 +89,8 @@ exports.create = function(req, res, next) {
         next(e);
       });
 
+    }).catch(function (e) {
+      next(e);
     });
 };
 
@@ -142,7 +144,7 @@ exports.delete = function(req, res) {
         _id: eventId,
         createdBy: user.id
       }, function(e, deleted) {
-        if (e) next(e);
+        if (e) return next(e);
 
         if (deleted) {
           res.send(deleted);
@@ -151,7 +153,9 @@ exports.delete = function(req, res) {
         }
       });
 
-    });
+    }).catch(function (e) {
+      next(e);
+    });;
 };
 
 //
@@ -171,7 +175,7 @@ exports.update = function(req, res) {
         _id: eventId,
         createdBy: user.id
       }, newEvent, function(e, modified) {
-        if (e) next(e);
+        if (e) return next(e);
 
         if (modified) {
           res.send(modified);
@@ -180,7 +184,9 @@ exports.update = function(req, res) {
         }
       });
 
-    });
+    }).catch(function (e) {
+      next(e);
+    });;
 };
 
 
@@ -200,8 +206,10 @@ exports.findByLocationId = function(req, res) {
     .where(conditions)
     .limit(ctx.EVENTS_MAXRESULTS)
     .sort('start.dateTime')
-    .exec(function(err, singleEvent) {
-      res.send(singleEvent);
+    .exec(function(e, singleEvent) {
+      if(e) return next(e);
+
+      res.status(200).send(singleEvent);
     });
 };
 
@@ -213,11 +221,15 @@ exports.addImage = function(req, res) {
   var eventId = req.params.id;
 
 
-  upload.uploadImage(req, res, function(imageUrl) {
+  upload.uploadImage(req, res, function(e, imageUrl) {
+
+    if (e){
+      console.warn("Could not save the image", e);
+    }
 
     if (!(userId && eventId && imageUrl)) {
       console.error("Invalid image parameters ", userId, eventId, imageUrl);
-      res.status(500).send({
+      res.status(400).send({
         "messages": ["Could not save the image"]
       })
       return
@@ -243,9 +255,12 @@ exports.addImage = function(req, res) {
             images: savedImage
           }
         }, function(e, event) {
-          if (e) next(e);
+          if (e) return next(e);
+
           res.status(201).send(savedImage);
         });
+      }).catch(function (e) {
+        next(e);
       });
 
   });

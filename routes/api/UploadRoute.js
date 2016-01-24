@@ -22,13 +22,9 @@ var multer = multer({
 
 var upload = multer.single("image");
 
-exports.uploadImage = function(req, res, next) {
+exports.uploadImage = function(req, res, done) {
 
   upload(req, res, function(e) {
-    if (e) {
-      next(e);
-    }
-
-    next(req.NEW_FILE_NAME);
+    done(e, req.NEW_FILE_NAME);
   });
 };
