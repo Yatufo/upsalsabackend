@@ -9,7 +9,8 @@ function findById(userId) {
       })
       .populate("ratings")
       .exec(function(e, foundUser) {
-
+        if (e) return next(e);
+        
         if (foundUser) {
           resolve(foundUser)
         } else {

@@ -27,7 +27,7 @@ exports.create = function(req, res, next) {
       newLocation.id = newLocation.name.replace(' ', '');
       var locationData = new data.Location(newLocation);
       locationData.save(function(e, saved) {
-        if (e) next(e);
+        if (e) return next(e);
 
         res.status(201).send(saved);
       });
@@ -55,7 +55,7 @@ exports.delete = function(req, res, next) {
 
 
     data.Location.findOneAndRemove({ _id: locationId, createdBy: user.id}, function(e, deleted) {
-      if (e) next(e);
+      if (e) return next(e);
 
       if (deleted) {
         res.send(deleted);
@@ -84,7 +84,7 @@ exports.update = function(req, res, next) {
 
       newLocation.createdBy = user.id;
       data.Location.findOneAndUpdate({ _id: locationId, createdBy: user.id}, newLocation, function(e, modified) {
-        if (e) next(e);
+        if (e) return next(e);
 
         if (modified) {
           res.send(modified);
@@ -113,7 +113,7 @@ exports.findAll = function(req, res) {
     })
     .limit(maxResults)
     .exec(function(e, locations) {
-      if(e) next(e);
+      if(e) return next(e);
 
       res.send(locations);
     });
@@ -129,7 +129,7 @@ exports.findById = function(req, res) {
     .select('id name url phone address coordinates.latitude coordinates.longitude ratings images score comments')
     .populate('comments')
     .exec(function(e, singleLocation) {
-      if (e) next(e);
+      if (e) return next(e);
       res.send(singleLocation);
     });
 };
@@ -141,7 +141,10 @@ exports.addImage = function(req, res, next) {
   var locationId = req.params.id;
 
 
-  upload.uploadImage(req, res, function(imageUrl) {
+  upload.uploadImage(req, res, function(e, imageUrl) {
+    if (e){
+      console.warn("Could not save the image", e);
+    }
 
     if (!(userId && locationId && imageUrl)) {
       console.error("Invalid image parameters ", userId, locationId, imageUrl);
@@ -168,7 +171,7 @@ exports.addImage = function(req, res, next) {
             images: savedImage
           }
         }, function(e, location) {
-          if (e) next(e);
+          if (e) return next(e);
 
           res.status(201).send(savedImage);
         });
