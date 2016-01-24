@@ -89,6 +89,8 @@ exports.create = function(req, res, next) {
         next(e);
       });
 
+    }).catch(function (e) {
+      next(e);
     });
 };
 
@@ -151,7 +153,9 @@ exports.delete = function(req, res) {
         }
       });
 
-    });
+    }).catch(function (e) {
+      next(e);
+    });;
 };
 
 //
@@ -180,7 +184,9 @@ exports.update = function(req, res) {
         }
       });
 
-    });
+    }).catch(function (e) {
+      next(e);
+    });;
 };
 
 
@@ -200,7 +206,9 @@ exports.findByLocationId = function(req, res) {
     .where(conditions)
     .limit(ctx.EVENTS_MAXRESULTS)
     .sort('start.dateTime')
-    .exec(function(err, singleEvent) {
+    .exec(function(e, singleEvent) {
+      if(e) next(e);
+
       res.send(singleEvent);
     });
 };
@@ -217,7 +225,7 @@ exports.addImage = function(req, res) {
 
     if (!(userId && eventId && imageUrl)) {
       console.error("Invalid image parameters ", userId, eventId, imageUrl);
-      res.status(500).send({
+      res.status(400).send({
         "messages": ["Could not save the image"]
       })
       return
@@ -246,6 +254,8 @@ exports.addImage = function(req, res) {
           if (e) next(e);
           res.status(201).send(savedImage);
         });
+      }).catch(function (e) {
+        next(e);
       });
 
   });

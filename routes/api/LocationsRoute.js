@@ -32,7 +32,10 @@ exports.create = function(req, res, next) {
         res.status(201).send(saved);
       });
 
+  }).catch(function (e) {
+    next(e);
   });
+;
 
 
 };
@@ -61,7 +64,10 @@ exports.delete = function(req, res, next) {
       }
     });
 
+  }).catch(function (e) {
+    next(e);
   });
+;
 };
 
 //
@@ -87,7 +93,10 @@ exports.update = function(req, res, next) {
         }
       });
 
+  }).catch(function (e) {
+    next(e);
   });
+;
 };
 
 //
@@ -103,7 +112,9 @@ exports.findAll = function(req, res) {
       name: 1
     })
     .limit(maxResults)
-    .exec(function(err, locations) {
+    .exec(function(e, locations) {
+      if(e) next(e);
+
       res.send(locations);
     });
 };
@@ -117,10 +128,8 @@ exports.findById = function(req, res) {
     })
     .select('id name url phone address coordinates.latitude coordinates.longitude ratings images score comments')
     .populate('comments')
-    .exec(function(err, singleLocation) {
-      if (err) {
-        console.error('location not found for that id: ', req.params.id, err);
-      }
+    .exec(function(e, singleLocation) {
+      if (e) next(e);
       res.send(singleLocation);
     });
 };
@@ -164,6 +173,8 @@ exports.addImage = function(req, res, next) {
           res.status(201).send(savedImage);
         });
 
+    }).catch(function (e) {
+      next(e);
     });
 
   });
