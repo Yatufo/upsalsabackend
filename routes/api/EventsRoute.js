@@ -1,6 +1,6 @@
 //Config for the app
 var _ = require('underscore-node');
-var moment = require('moment');
+var moment = require('moment-timezone');
 var async = require('async');
 var data = require('../model/core-data.js');
 var ctx = require('../util/conf.js').context();
@@ -101,12 +101,16 @@ function getEventDatas(event) {
   if (_.isObject(event.recurrence) && event.recurrence.rule) {
 
     var duration = moment(event.end.dateTime).diff(event.start.dateTime);
-    var rule = RRule.fromString(event.recurrence.rule);
+
+    //Workaround since the rrule does not support timeZones https://github.com/jkbrzt/rrule/issues/38
+    var options = RRule.parseString(event.recurrence.rule)
+    options.dtstart = moment.tz(event.start.dateTime, event.start.timeZone).toDate();
+    var rule = new RRule(options)
+
     var recurrenceId = data.ObjectId();
 
     result = rule.all().map(function(ruleStart) {
       var recurentEvent = clone(event);
-
       var startTime = moment(ruleStart);
       var endTime = moment(startTime).add(duration, 'milliseconds');
 

@@ -41,10 +41,12 @@ var EventSchema = new Schema({
     lastUpdate: Date
   },
   start: {
-    dateTime: Date
+    dateTime: Date,
+    timeZone: String
   },
   end: {
-    dateTime: Date
+    dateTime: Date,
+    timeZone: String
   },
   sequence: Number,
   categories: [{
