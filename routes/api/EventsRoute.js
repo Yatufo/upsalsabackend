@@ -100,18 +100,28 @@ function getEventDatas(event) {
 
   if (_.isObject(event.recurrence) && event.recurrence.rule) {
 
-    var duration = moment(event.end.dateTime).diff(event.start.dateTime);
 
     //Workaround since the rrule does not support timeZones https://github.com/jkbrzt/rrule/issues/38
     var options = RRule.parseString(event.recurrence.rule)
-    options.dtstart = moment.tz(event.start.dateTime, event.start.timeZone).toDate();
-    var rule = new RRule(options)
 
+    var start = moment.tz(event.start.dateTime, event.start.timeZone);
+    var endTime   = moment.tz(event.end.dateTime,   event.end.timeZone);
+    var duration = endTime.diff(start);
+
+    var zoneOffSet = start.utcOffset()
+
+    //Moving to UTC but keeping the same dateTime
+    start.add(zoneOffSet, 'minutes');
+
+    options.dtstart = start.toDate();
+    var rule = new RRule(options)
     var recurrenceId = data.ObjectId();
 
-    result = rule.all().map(function(ruleStart) {
+    result = rule.all().map(function(recurrent) {
       var recurentEvent = clone(event);
-      var startTime = moment(ruleStart);
+
+      //Moving back to the right timeZone keeping the same dateTime
+      var startTime = moment(recurrent).subtract(zoneOffSet, 'minutes');
       var endTime = moment(startTime).add(duration, 'milliseconds');
 
       recurentEvent.start.dateTime = startTime.toDate();
