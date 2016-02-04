@@ -1,5 +1,5 @@
 //Config for the app
-var _ = require('underscore-node');
+var _ = require('lodash-node');
 var moment = require('moment-timezone');
 var async = require('async');
 var data = require('../model/core-data.js');
@@ -153,11 +153,10 @@ exports.delete = function(req, res) {
     .findById(userId)
     .then(function(user) {
 
+      var permission = _.includes(user.roles, "ADMIN") ? {} : {createdBy: user.id};
+      var conditions = _.extend({_id: eventId}, permission)
 
-      data.Event.findOneAndRemove({
-        _id: eventId,
-        createdBy: user.id
-      }, function(e, deleted) {
+      data.Event.findOneAndRemove(conditions, function(e, deleted) {
         if (e) return next(e);
 
         if (deleted) {
@@ -183,12 +182,11 @@ exports.update = function(req, res) {
     .findById(userId)
     .then(function(user) {
 
+      var permission = _.includes(user.roles, "ADMIN") ? {} : {createdBy: user.id};
+      var conditions = _.extend({_id: eventId}, permission)
 
       newEvent.createdBy = user.id;
-      data.Event.findOneAndUpdate({
-        _id: eventId,
-        createdBy: user.id
-      }, newEvent, function(e, modified) {
+      data.Event.findOneAndUpdate(conditions, newEvent, function(e, modified) {
         if (e) return next(e);
 
         if (modified) {
@@ -262,9 +260,10 @@ exports.addImage = function(req, res) {
           created: new Date()
         }
 
-        data.Event.findOneAndUpdate({
-          _id: eventId
-        }, {
+        var permission = _.includes(user.roles, "ADMIN") ? {} : {createdBy: user.id};
+        var conditions = _.extend({_id: eventId}, permission)
+
+        data.Event.findOneAndUpdate(conditions, {
           $addToSet: {
             images: savedImage
           }

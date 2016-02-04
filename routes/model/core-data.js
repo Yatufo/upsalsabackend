@@ -9,7 +9,8 @@ var EventSchema = new Schema({
   location: {
     id: {
       type: String,
-      ref: 'Location'
+      ref: 'Location',
+      required: true
     },
     name: String,
     address: String,
@@ -206,6 +207,7 @@ var UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Rating'
   }],
+  roles: [String]
 });
 
 
