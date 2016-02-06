@@ -110,7 +110,7 @@ exports.findAll = function(req, res) {
 
   var maxResults = ctx.LOCATIONS_MAXRESULTS;
   data.Location.find()
-    .select('id name url phone address coordinates.latitude coordinates.longitude ratings images score comments')
+    .select('id name url phone address description coordinates.latitude coordinates.longitude ratings images score comments createdBy')
     .populate('comments')
     .sort({
       score: -1,
@@ -131,7 +131,7 @@ exports.findById = function(req, res) {
   data.Location.findOne({
       "id": req.params.id
     })
-    .select('id name url phone address coordinates.latitude coordinates.longitude ratings images score comments')
+    .select('id name url phone address description coordinates.latitude coordinates.longitude ratings images score comments createdBy')
     .populate('comments')
     .exec(function(e, singleLocation) {
       if (e) return next(e);
