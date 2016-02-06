@@ -1,3 +1,4 @@
+var _ = require('lodash-node');
 var data = require('../model/core-data.js');
 var upload = require('./UploadRoute.js');
 var ctx = require('../util/conf.js').context();
@@ -53,8 +54,10 @@ exports.delete = function(req, res, next) {
     .findById(userId)
     .then(function(user) {
 
+    var permission = _.includes(user.roles, "ADMIN") ? {} : {createdBy: user.id};
+    var conditions = _.extend({_id: locationId}, permission)
 
-    data.Location.findOneAndRemove({ _id: locationId, createdBy: user.id}, function(e, deleted) {
+    data.Location.findOneAndRemove(conditions, function(e, deleted) {
       if (e) return next(e);
 
       if (deleted) {
@@ -82,8 +85,10 @@ exports.update = function(req, res, next) {
     .then(function(user) {
 
 
-      newLocation.createdBy = user.id;
-      data.Location.findOneAndUpdate({ _id: locationId, createdBy: user.id}, newLocation, function(e, modified) {
+      var permission = _.includes(user.roles, "ADMIN") ? {} : {createdBy: user.id};
+      var conditions = _.extend({_id: locationId}, permission)
+
+      data.Location.findOneAndUpdate(conditions, newLocation, function(e, modified) {
         if (e) return next(e);
 
         if (modified) {
