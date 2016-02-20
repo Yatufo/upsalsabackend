@@ -25,11 +25,6 @@ var app = express();
 // gzip/deflate outgoing responses
 var compression = require('compression')
 
-if (ctx.prerenderToken) {
-  console.log("Prerender On");
-  app.use(require('prerender-node').set('prerenderToken', ctx.prerenderToken));
-}
-
 app.set('port', (process.env.PORT || 3002));
 
 app.use(bodyParser.json());
