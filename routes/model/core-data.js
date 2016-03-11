@@ -148,8 +148,9 @@ LocationSchema.set('toJSON', {
 
 var RatingSchema = new Schema({
   location: {
-    type: String,
-    ref: 'Location'
+    type: Schema.Types.ObjectId,
+    ref: 'Location',
+    required: true
   },
   category: {
     type: String,

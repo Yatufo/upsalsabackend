@@ -10,7 +10,7 @@ var updateLocationRatings = function(rating) {
     location: rating.location
   }, function(e, ratings) {
     data.Location.findOneAndUpdate({
-      id: rating.location
+      _id: rating.location
     }, {
       $set: {
         ratings: ratings,
