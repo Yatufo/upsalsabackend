@@ -25,7 +25,7 @@ exports.create = function(req, res, next) {
         })
       }
 
-      newLocation.id = _.kebabCase(_.truncate(newLocation.name, 40));
+      newLocation.code = _.kebabCase(_.truncate(newLocation.name, 40));
       var locationData = new data.Location(newLocation);
       locationData.save(function(e, saved) {
         if (e) return next(e);

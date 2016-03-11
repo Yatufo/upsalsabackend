@@ -5,6 +5,7 @@ var ctx = require('../util/conf.js').context();
 var Schema = mongoose.Schema;
 
 var EventSchema = new Schema({
+  code: String,
   name: String,
   description: String,
   location: {
@@ -67,10 +68,6 @@ EventSchema.virtual('id').get(function() {
   return this._id;
 });
 
-EventSchema.virtual('code').get(function() {
-  return _.kebabCase(_.truncate(this.name, 40));
-});
-
 EventSchema.virtual('duration').get(function() {
   return Math.round((this.end.dateTime - this.start.dateTime) / 360000) / 10;
 });
@@ -108,8 +105,9 @@ CategorySchema.set('toJSON', {
 
 
 var LocationSchema = new Schema({
-  description: String,
+  code: String,
   name: String,
+  description: String,
   address: String,
   url: String,
   phone: String,
@@ -141,10 +139,6 @@ var LocationSchema = new Schema({
 
 LocationSchema.virtual('id').get(function() {
   return this._id;
-});
-
-LocationSchema.virtual('code').get(function() {
-  return _.kebabCase(_.truncate(this.name, 40));
 });
 
 LocationSchema.set('toJSON', {

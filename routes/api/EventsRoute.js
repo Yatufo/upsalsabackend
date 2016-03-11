@@ -70,7 +70,7 @@ exports.create = function(req, res, next) {
     .findById(userId)
     .then(function(user) {
       newEvent.createdBy = user.id;
-
+      newEvent.code = _.kebabCase(_.truncate(newEvent.name, 40));
       if (newEvent.images) {
         newEvent.images.forEach(function(image) {
           image.createdBy = user.id
