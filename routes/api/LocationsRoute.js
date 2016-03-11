@@ -133,9 +133,15 @@ exports.findById = function(req, res) {
     })
     .select('id code name url phone address description coordinates.latitude coordinates.longitude ratings images score comments createdBy')
     .populate('comments')
-    .exec(function(e, singleLocation) {
+    .exec(function(e, location) {
       if (e) return next(e);
-      res.send(singleLocation);
+
+      if (location){
+        res.send(location);
+      } else {
+        res.status(404).send();
+      }
+
     });
 };
 
