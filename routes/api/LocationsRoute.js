@@ -1,4 +1,4 @@
-var _ = require('lodash-node');
+var _ = require('lodash');
 var data = require('../model/core-data.js');
 var upload = require('./UploadRoute.js');
 var ctx = require('../util/conf.js').context();
@@ -25,7 +25,7 @@ exports.create = function(req, res, next) {
         })
       }
 
-      newLocation.id = _.kebabCase(_.trunc(newLocation.name, 40));
+      newLocation.id = _.kebabCase(_.truncate(newLocation.name, 40));
       var locationData = new data.Location(newLocation);
       locationData.save(function(e, saved) {
         if (e) return next(e);
@@ -110,7 +110,7 @@ exports.findAll = function(req, res) {
 
   var maxResults = ctx.LOCATIONS_MAXRESULTS;
   data.Location.find()
-    .select('id name url phone address description coordinates.latitude coordinates.longitude ratings images score comments createdBy')
+    .select('id code name url phone address description coordinates.latitude coordinates.longitude ratings images score comments createdBy')
     .populate('comments')
     .sort({
       score: -1,
@@ -129,9 +129,9 @@ exports.findAll = function(req, res) {
 exports.findById = function(req, res) {
 
   data.Location.findOne({
-      "id": req.params.id
+      "_id": req.params.id
     })
-    .select('id name url phone address description coordinates.latitude coordinates.longitude ratings images score comments createdBy')
+    .select('id code name url phone address description coordinates.latitude coordinates.longitude ratings images score comments createdBy')
     .populate('comments')
     .exec(function(e, singleLocation) {
       if (e) return next(e);
@@ -170,7 +170,7 @@ exports.addImage = function(req, res, next) {
         }
 
         data.Location.findOneAndUpdate({
-          id: locationId
+          _id: locationId
         }, {
           $addToSet: {
             images: savedImage

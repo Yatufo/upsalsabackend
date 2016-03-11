@@ -51,9 +51,7 @@
      SYNC_CALENDAR_ACCESSROLE: 'owner',
      PUBLIC_DIR: '/public/app',
      SITE_INDEX: '/index-local.html',
-     MAX_AGE_GENERAL: 0,
-     MAX_AGE_ASSETS: 0
-
+     NOTIFICATIONS_ENABLED: false
    },
    prod: {
      googlesetup: {
@@ -96,8 +94,7 @@
      SYNC_CALENDAR_ACCESSROLE: 'owner',
      PUBLIC_DIR: '/public/app',
      SITE_INDEX: '/index.html',
-     MAX_AGE_GENERAL: 24 * 60 * 60 * 1000,
-     MAX_AGE_ASSETS: 365 * 24 * 60 * 60 * 1000
+     NOTIFICATIONS_ENABLED: true
    }
 
 

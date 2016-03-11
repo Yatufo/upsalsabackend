@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var mongoose = require('mongoose');
 var ctx = require('../util/conf.js').context();
 
@@ -61,6 +62,15 @@ var EventSchema = new Schema({
   }
 });
 
+
+EventSchema.virtual('id').get(function() {
+  return this._id;
+});
+
+EventSchema.virtual('code').get(function() {
+  return _.kebabCase(_.truncate(this.name, 40));
+});
+
 EventSchema.virtual('duration').get(function() {
   return Math.round((this.end.dateTime - this.start.dateTime) / 360000) / 10;
 });
@@ -94,11 +104,10 @@ CategorySchema.set('toJSON', {
 });
 
 
+
+
+
 var LocationSchema = new Schema({
-  id: {
-    type: String,
-    index: true
-  },
   description: String,
   name: String,
   address: String,
@@ -129,6 +138,19 @@ var LocationSchema = new Schema({
     required: true
   }
 });
+
+LocationSchema.virtual('id').get(function() {
+  return this._id;
+});
+
+LocationSchema.virtual('code').get(function() {
+  return _.kebabCase(_.truncate(this.name, 40));
+});
+
+LocationSchema.set('toJSON', {
+  virtuals: true
+});
+
 
 var RatingSchema = new Schema({
   location: {

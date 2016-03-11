@@ -1,5 +1,5 @@
 //Config for the app
-var _ = require('lodash-node');
+var _ = require('lodash');
 var moment = require('moment-timezone');
 var async = require('async');
 var data = require('../model/core-data.js');
