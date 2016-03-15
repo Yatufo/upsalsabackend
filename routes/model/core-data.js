@@ -173,7 +173,7 @@ RatingSchema.set('toJSON', {
 
 var CommentSchema = new Schema({
   location: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: 'Location',
     required: true
   },

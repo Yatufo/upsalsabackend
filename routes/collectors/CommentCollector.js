@@ -4,7 +4,7 @@ var data = require('../model/core-data.js');
 
 var updateLocationComments = function(comment, done) {
   data.Location.findOneAndUpdate({
-    id: comment.location
+    _id: comment.location
   }, {
     $addToSet: {
       comments: comment._id
