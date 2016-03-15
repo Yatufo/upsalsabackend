@@ -189,7 +189,7 @@ var CommentSchema = new Schema({
     type: Date,
     required: true
   },
-  user: {
+  createdBy: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true

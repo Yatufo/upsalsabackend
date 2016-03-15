@@ -13,7 +13,7 @@ exports.create = function(req, res, next) {
       var commentData = new data.Comment(req.body);
       commentData.created = new Date();
       commentData.lastUpdate = commentData.created;
-      commentData.user = user._id;
+      commentData.createdBy = user._id;
       commentData.userInfo = user.publicInfo;
       commentData.save(function(e) {
         if (e) return next(e);
@@ -38,7 +38,7 @@ exports.update = function(req, res, next) {
     .then(function(user) {
       data.Comment.findOneAndUpdate({
         _id: req.body.id,
-        user: user._id
+        createdBy: user._id
       }, {
         $set: {
           lastUpdate: new Date(),
